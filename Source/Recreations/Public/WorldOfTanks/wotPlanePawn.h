@@ -33,6 +33,7 @@ class RECREATIONS_API AwotPlanePawn : public APawn
 
 private:
     AwotPlanePawn();
+    ~AwotPlanePawn();
 	virtual void BeginPlay() override; 
     void SetupInformation();
 	virtual void Tick(float DeltaTime) override;

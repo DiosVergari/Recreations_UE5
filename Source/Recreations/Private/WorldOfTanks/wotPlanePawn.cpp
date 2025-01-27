@@ -25,6 +25,10 @@ AwotPlanePawn::AwotPlanePawn()
     AutoPossessPlayer = EAutoReceiveInput::Player0;
 }
 
+AwotPlanePawn::~AwotPlanePawn()
+{
+}
+
 void AwotPlanePawn::BeginPlay()
 {
     Super::BeginPlay();
@@ -56,22 +60,20 @@ void AwotPlanePawn::LerpRotator(float DeltaTime)
 
     if(Controller)
     {
-        FRotator CurrentRotation = CapsuleComp->GetComponentRotation();
-        FRotator TargetRotation = Controller->GetControlRotation();
-        FRotator NewRotation = FMath::Lerp(CurrentRotation, TargetRotation, RotationLerpProgress);
+        FRotator NewRotation = FMath::Lerp(CapsuleComp->GetComponentRotation(),
+                                           Controller->GetControlRotation(),
+                                           RotationLerpProgress);
         CapsuleComp->SetWorldRotation(NewRotation);
     }
 }
 
 void AwotPlanePawn::PlaneAcceleration(float DeltaTime)
 {
-    float CurrentSpeed = RowPlaneData->MinSpeed + (RowPlaneData->MaxSpeed - RowPlaneData->MinSpeed) * (EnginePercentage * 0.01f);
-
-    if(CapsuleComp)
+    if(CapsuleComp && RowPlaneData)
     {
+        float CurrentSpeed = RowPlaneData->MinSpeed + (RowPlaneData->MaxSpeed - RowPlaneData->MinSpeed) * (EnginePercentage * 0.01f);
         FVector Movement = CapsuleComp->GetForwardVector() * CurrentSpeed * DeltaTime;
-        FVector NewPosition = CapsuleComp->GetComponentLocation() + Movement;
-        CapsuleComp->SetWorldLocation(NewPosition);
+        CapsuleComp->SetWorldLocation(CapsuleComp->GetComponentLocation() + Movement);
     }
 }
 
